@@ -1,6 +1,7 @@
 /** * Imports ***/
 import { helpersBorder } from '../helpers/helpers.border';
 import { helpersBoundingBox } from '../helpers/helpers.boundingbox';
+import { helpersGrid } from '../helpers/helpers.grid';
 import { helpersSlice } from '../helpers/helpers.slice';
 
 /**
@@ -47,6 +48,7 @@ const helpersStack = (three = window.THREE) => {
 
       this._stack = stack;
       this._bBox = null;
+      this._grid = null;
       this._slice = null;
       this._border = null;
       this._dummy = null;
@@ -93,6 +95,15 @@ const helpersStack = (three = window.THREE) => {
     get bbox() {
       return this._bBox;
     }
+    
+    /**
+     * Get grid helper.
+     *
+     * @type {HelpersGrid}
+     */
+    get grid() {
+      return this._grid;
+    }
 
     /**
      * Get slice helper.
@@ -135,6 +146,9 @@ const helpersStack = (three = window.THREE) => {
 
       // also update the border
       this._border.helpersSlice = this._slice;
+
+      // also update the grid
+      this._grid.index = this._index;
 
       // update ourOfBounds flag
       this._isIndexOutOfBounds();
@@ -256,7 +270,9 @@ const helpersStack = (three = window.THREE) => {
         // prepare visual objects
         this._prepareBBox();
         this._prepareSlice();
+        // this._slice.visible = true;
         this._prepareBorder();
+        this._prepareGrid();
         // todo: Arrow
       } else {
         window.console.log('no stack to be prepared...');
@@ -343,6 +359,15 @@ const helpersStack = (three = window.THREE) => {
       const HelpersBoundingBoxConstructor = helpersBoundingBox(three);
       this._bBox = new HelpersBoundingBoxConstructor(this._stack);
       this.add(this._bBox);
+    }
+
+    /**
+     * Setup grid helper...
+     */
+    _prepareGrid() {
+      const HelpersGridConstructor = helpersGrid(three);
+      this._grid = new HelpersGridConstructor(this._stack, this._slice);
+      this.add(this._grid);
     }
 
     /**
@@ -475,6 +500,8 @@ const helpersStack = (three = window.THREE) => {
       this._slice = null;
       this._bBox.dispose();
       this._bBox = null;
+      this._grid.dispose();
+      this._grid = null;
       this._border.dispose();
       this._border = null;
     }

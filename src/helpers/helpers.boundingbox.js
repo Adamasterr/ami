@@ -16,7 +16,7 @@ const helpersBoundingBox = (three = window.THREE) => {
       // private vars
       this._stack = stack;
       this._visible = true;
-      this._color = 0xffffff;
+      this._color = 0xffff00;
       this._material = null;
       this._geometry = null;
       this._mesh = null;
@@ -54,6 +54,7 @@ const helpersBoundingBox = (three = window.THREE) => {
       // Convenience vars
       const dimensions = this._stack.dimensionsIJK;
       const halfDimensions = this._stack.halfDimensionsIJK;
+      // const offset = new three.Vector3(-0.5, -0.5, -0.5);
       const offset = new three.Vector3(-0.5, -0.5, -0.5);
 
       // Geometry

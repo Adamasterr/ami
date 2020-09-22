@@ -84,6 +84,8 @@ const helpersBorder = (three = window.THREE) => {
 
       // and add it!
       this.add(this._mesh);
+      // console.log(this._geometry.getAttribute("position").array[0]);
+      // console.log("this._geometry.vertices");
     }
 
     _update() {

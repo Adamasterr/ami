@@ -19,6 +19,7 @@ const trackballOrtho = (three = window.THREE) => {
         NONE: -1,
         ROTATE: 1,
         ZOOM: 2,
+        SELECT: 3,
         PAN: 0,
         SCROLL: 4,
         TOUCH_ROTATE: 4,
@@ -46,10 +47,12 @@ const trackballOrtho = (three = window.THREE) => {
       this.noZoom = false;
       this.noPan = false;
 
+      this.noSelect = false;
+
       this.staticMoving = false;
       this.dynamicDampingFactor = 0.2;
 
-      this.keys = [65 /* A*/, 83 /* S*/, 68];
+      this.keys = [65 /* A*/, 83 /* S*/, 68 /* D*/, 16 /* SHIFT*/];
 
       // internals
 
@@ -248,6 +251,7 @@ const trackballOrtho = (three = window.THREE) => {
       // listeners
 
       function keydown(event) {
+        console.log(event.keyCode);
         if (_this.enabled === false) return;
 
         window.removeEventListener('keydown', keydown);
@@ -262,6 +266,8 @@ const trackballOrtho = (three = window.THREE) => {
           _state = STATE.ZOOM;
         } else if (event.keyCode === _this.keys[STATE.PAN] && !_this.noPan) {
           _state = STATE.PAN;
+        } else if (event.keyCode === _this.keys[STATE.SELECT] && !_this.noSelect) {
+          _state = STATE.SELECT;
         }
       }
 
@@ -282,6 +288,7 @@ const trackballOrtho = (three = window.THREE) => {
         if (_state === STATE.NONE) {
           _state = event.button;
         }
+        console.log(event.button);
 
         if (_state === STATE.ROTATE && !_this.noRotate) {
         } else if (_state === STATE.ZOOM && !_this.noZoom) {
@@ -290,7 +297,7 @@ const trackballOrtho = (three = window.THREE) => {
         } else if (_state === STATE.PAN && !_this.noPan) {
           _panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
           _panEnd.copy(_panStart);
-        }
+        } /* TODO: else if state SELECT - select a slot for the grid*/
 
         document.addEventListener('mousemove', mousemove, false);
         document.addEventListener('mouseup', mouseup, false);

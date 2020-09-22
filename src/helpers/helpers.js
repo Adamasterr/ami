@@ -1,5 +1,6 @@
 import Border, { helpersBorder } from './helpers.border';
 import BoundingBox, { helpersBoundingBox } from './helpers.boundingbox';
+import Grid, {helpersGrid} from './helpers.grid';
 import Contour, { helpersContour } from './helpers.contour';
 import Localizer, { helpersLocalizer } from './helpers.localizer';
 import Lut, { helpersLut } from './helpers.lut';
@@ -15,6 +16,8 @@ export {
   helpersBorder as borderHelperFactory,
   BoundingBox as BoundingBoxHelper,
   helpersBoundingBox as boundingBoxHelperFactory,
+  Grid as GridHelper,
+  helpersGrid as gridHelperFactory,
   Contour as ContourHelper,
   helpersContour as contourHelperFactory,
   Localizer as LocalizerHelper,

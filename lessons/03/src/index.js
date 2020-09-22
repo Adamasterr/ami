@@ -1,3 +1,5 @@
+const AMI = require("../../../build/ami");
+
 import { colors, file } from './utils';
 
 // Setup renderer
@@ -44,11 +46,14 @@ loader
   .then(() => {
     const series = loader.data[0].mergeSeries(loader.data);
     const stack = series[0].stack[0];
+    // console.log(series);
     loader.free();
 
     const stackHelper = new AMI.StackHelper(stack);
     stackHelper.bbox.visible = false;
-    stackHelper.border.color = colors.red;
+    // stackHelper.border.color = 0xff0000;
+    // stackHelper.grid.visible = true;
+    // stackHelper.grid.color = 0xffff00;
     scene.add(stackHelper);
 
     gui(stackHelper);
@@ -165,5 +170,20 @@ const gui = stackHelper => {
     .add(stackHelper.slice, 'interpolation', 0, 1)
     .step(1)
     .listen();
+  const gridVisible = stackFolder.add(stackHelper.grid, 'gridVisible');
+  gridVisible.onChange(value => {
+    stackHelper.grid.gridVisible = value;
+    console.log(stackHelper.grid.gridVisible);
+  });
+    // stackFolder
+    // .add(stackHelper.grid, 'gridVisible', 0, 1)
+    // .listen();
   stackFolder.open();
+
+  // const positionFolder = gui.addFolder('Mouse Posision');
+  // positionFolder
+  //   .add(stackHelper, 'x', 0, 255)
+  //   .step(1)
+  //   .listen();
+  // positionFolder.open();
 };

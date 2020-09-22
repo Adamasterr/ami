@@ -70,6 +70,7 @@
     "check-codestyle": "prettier-check 'src/**/*.{js,jsx,json,css,ts,tsx}'",
     "fix-all-code-style": "prettier --write '{{src/**,examples/**, lessons/**}/,}*.{js,jsx,json,css,ts,tsx}'",
     "build:ami": "webpack --config webpack.config.build.js --display-error-details",
+    "build:ami:watch": "webpack --watch --config webpack.config.build.js --display-error-details",
     "build:ami:prod": "cross-env NODE_ENV=production yarn build:ami",
     "build:clean": "rimraf -rf build/*",
     "build:clean:hot": "rimraf -rf build/*.hot-update.*",

@@ -1,3 +1,5 @@
+const AMI = require("../../../build/ami");
+
 import { colors, files } from './utils';
 
 // Classic ThreeJS setup

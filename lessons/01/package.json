@@ -4,7 +4,7 @@
   "description": "Visualiza DICOM in 3D",
   "main": "index.html",
   "scripts": {
-    "start": "parcel index.html --open"
+    "start": "parcel index.html --open --port 8001"
   },
   "dependencies": {
     "parcel": "^1.10.3"

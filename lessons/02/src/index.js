@@ -36,7 +36,7 @@ const particleLight = new THREE.Mesh(
   new THREE.SphereBufferGeometry(4, 8, 8),
   new THREE.MeshBasicMaterial({ color: 0xffffff })
 );
-scene.add(particleLight);
+// scene.add(particleLight);
 
 scene.add(new THREE.AmbientLight(0x222222));
 
