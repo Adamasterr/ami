@@ -11,3 +11,5 @@ old_data
 .vscode
 .jsbeautifyrc
 .cache
+build/ami.js
+build/ami.js.map

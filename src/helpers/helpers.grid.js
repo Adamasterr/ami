@@ -2,6 +2,8 @@
  * @module helpers/grid
  */
 
+import { LineBasicMaterial } from "three";
+
 
 const helpersGrid = (three = window.THREE) => {
   if (three === undefined || three.Object3D === undefined) {
@@ -206,22 +208,101 @@ const helpersGrid = (three = window.THREE) => {
 CHANGE THIS TO TILEMAP
 */
 
-      
-/* 
-      this._geometry = new three.PlaneBufferGeometry(this._halfDimensions.x * 2, this.halfDimensions.y * 2, this._halfDimensions.x * 2 , this._halfDimensions.y * 2);
-      this._material = new three.MeshBasicMaterial( {color: 0x00ff00, side: three.BackSide, wireframe: true});
-      this._mesh = new three.Mesh(this._geometry, this._material);
-      // this._mesh = new three.LineSegments(this._geometry);
+      /* this._mesh = new three.GridHelper(500, 500, 0x00ff00, 0xff0000);
+      if (this._aaBBspace === 'IJK') {
+        this._mesh.applyMatrix(new three.Matrix4().makeTranslation(this._halfDimensions.x - 0.5, this._halfDimensions.y - 0.5, this._index - 0.5));
+        this._mesh.applyMatrix(this._stack.ijk2LPS);
+      } */
+
+      /* this._geometry = new three.PlaneBufferGeometry(this._halfDimensions.x * 2, this.halfDimensions.y * 2, this._halfDimensions.x * 2 / 16 , this._halfDimensions.y * 2 / 16);
+      this.material = new three.LineBasicMaterial();
+      // this._material = new three.MeshBasicMaterial( {color: 0x00ff00, side: three.BackSide, wireframe: true});
+      // this._mesh = new three.Mesh(this._geometry, this._material);
+      this._mesh = new three.LineSegments(this._geometry, this._material);
 
       if (this._aaBBspace === 'IJK') {
         this._mesh.applyMatrix(new three.Matrix4().makeTranslation(this._halfDimensions.x - 0.5, this._halfDimensions.y - 0.5, this._index - 0.5));
         this._mesh.applyMatrix(this._stack.ijk2LPS);
-      }
-       */
+      } */
+      
+      const color1 = new three.Color( color1 !== undefined ? color1 : 0x444444 );
+      const color2 = new three.Color( color2 !== undefined ? color2 : 0x888888 );
 
+
+      const vertices = [], colors = [];
+      // const triples = [];
+      // const divisions = 1;
+      // const size = 250;
+      const sizes = {x: this._halfDimensions.x * 2, y: this._halfDimensions.y * 2};
+      const counts = {x: this._halfDimensions.x * 2, y: this._halfDimensions.y * 2};
+
+      const centerX = sizes.x / 2;
+      const centerY = sizes.y / 2;
+      // const step = size / divisions;
+      // const halfSize = size / 2;
+
+      const step = sizes.x / counts.x;
+
+      for (let i = 0, j = 0, y = 0; i <= counts.y; i++, y += step) {
+        vertices.push(0, y, 0, sizes.x, y, 0);
+        
+        const color = i === centerY ? color1 : color2;
+        
+        color.toArray( colors, j); j += 3;
+        color.toArray( colors, j); j += 3;
+      }
+
+      for (let i = 0, j = 6 * (counts.y + 1), x = 0; i <= counts.x; i++, x += step) {
+        vertices.push(x, 0, 0, x, sizes.y, 0);
+        
+        const color = i === centerX ? color1 : color2;
+        
+        color.toArray( colors, j); j += 3;
+        color.toArray( colors, j); j += 3;
+      }
+
+      console.log(vertices);
+      console.log(colors);
+      
+      
+      /* for ( let i = 0, j = 0, k = - halfSize; i <= divisions; i ++, k += step ) {
+
+        vertices.push( - halfSize, k, -5, halfSize, k, -5 );
+        vertices.push( k, -halfSize, -5, k, halfSize, -5 );
+        
+        triples.push([- halfSize, k, -5], [halfSize, k, -5]);
+        triples.push([k, -halfSize, -5], [k, halfSize, -5]);
+
+        const color = i === center ? color1 : color2;
+
+        color.toArray( colors, j); j += 3;
+        color.toArray( colors, j); j += 3;
+        color.toArray( colors, j); j += 3;
+        color.toArray( colors, j); j += 3;
+
+  
+      }
+      console.log(triples); */
+
+      this._geometry = new three.BufferGeometry();
+      this._geometry.setAttribute('position', new three.Float32BufferAttribute(vertices, 3));
+      this._geometry.setAttribute('color', new three.Float32BufferAttribute(colors, 3));
+
+      this._material = new three.LineBasicMaterial( {vertexColors: true, toneMapped: false});
+
+      this._mesh = new three.LineSegments(this._geometry, this._material);
+
+      if (this._aaBBspace === 'IJK') {
+        this._mesh.applyMatrix(new three.Matrix4().makeTranslation(- 0.5,- 0.5, this._index - 0.5));
+        this._mesh.applyMatrix(this._stack.ijk2LPS);
+      };
+
+      
+/* 
       this._geometry = new three.PlaneBufferGeometry(1, 1, 1, 1);
-      this._material = new three.MeshBasicMaterial( {color: 0x00ff00, side: three.BackSide, wireframe: true, transparent: true, opacity: 0.3});
-      let counts = {w: this._halfDimensions.x * 2, h: this._halfDimensions.y * 2};
+      // this._material = new three.MeshBasicMaterial( {color: 0x00ff00, side: three.BackSide, wireframe: true, transparent: true, opacity: 0.3});
+      this._material = new three.LineBasicMaterial({color: 0x00ff00});
+      let counts = {w: this._halfDimensions.x * 2 / 2, h: this._halfDimensions.y * 2 / 2};
       
       this._mesh = new three.InstancedMesh(this._geometry, this._material, counts.w * counts.h);
 
@@ -239,7 +320,7 @@ CHANGE THIS TO TILEMAP
         }
         this._mesh.applyMatrix(this._stack.ijk2LPS);
       }
-      
+       */
 
       this._mesh.visible = this._gridVisible;
 

@@ -1,3 +1,4 @@
+/* globals Stats*/
 const AMI = require("../../../build/ami");
 
 import { colors, file } from './utils';
@@ -22,6 +23,9 @@ const camera = new AMI.OrthographicCamera(
   0.1,
   10000
 );
+
+const stats = new Stats();
+document.body.appendChild( stats.dom );
 
 // Setup controls
 const controls = new AMI.TrackballOrthoControl(camera, container);
@@ -93,6 +97,7 @@ loader
 const animate = () => {
   controls.update();
   renderer.render(scene, camera);
+  stats.update();
 
   requestAnimationFrame(function() {
     animate();
