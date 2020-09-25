@@ -2,8 +2,6 @@
  * @module helpers/grid
  */
 
-import { LineBasicMaterial } from "three";
-
 
 const helpersGrid = (three = window.THREE) => {
   if (three === undefined || three.Object3D === undefined) {
@@ -25,7 +23,7 @@ const helpersGrid = (three = window.THREE) => {
       this._stack = stack;
       this._slice = slice;
 
-      this._gridVisible = true;
+      this._gridVisible = false;
       this._color = 0x00ff00;
       this._material = null;
       this._geometry = null;
@@ -176,6 +174,8 @@ const helpersGrid = (three = window.THREE) => {
       return this._center;
     }
 
+
+
     _init() {
       if (!this._stack || !this._stack._prepared || !this._stack._packed) {
         return;
@@ -196,10 +196,20 @@ const helpersGrid = (three = window.THREE) => {
         this._center = this._stack.centerAABBox();
         this._toAABB = this._stack.lps2AABB;
       }
+/* 
+      function mousemove(event) {
+        event.preventDefault();
+        console.log("HEYYA");
+      }
+
+      document.addEventListener('mousemove', mousemove);
+ */
     }
 
+
+
     _create() {
-      if (!this._stack || !this._stack.prepared || !this._stack.packed) {
+      if (!this._stack || !this._stack.prepared || !this._stack.packed || !this._gridVisible) {
         return;
       }
 
@@ -246,8 +256,6 @@ const helpersGrid = (three = window.THREE) => {
         this._mesh.applyMatrix(new three.Matrix4().makeTranslation(- 0.5,- 0.5, this._index - 0.5));
         this._mesh.applyMatrix(this._stack.ijk2LPS);
       };
-
-      this._mesh.visible = this._gridVisible;
 
       this.add(this._mesh);
     }
