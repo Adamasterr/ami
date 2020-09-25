@@ -42,11 +42,12 @@ const helpersStack = (three = window.THREE) => {
 
   const Constructor = three.Object3D;
   return class extends Constructor {
-    constructor(stack) {
+    constructor(stack, camera) {
       //
       super();
 
       this._stack = stack;
+      this._camera = camera;
       this._bBox = null;
       this._grid = null;
       this._slice = null;
@@ -398,7 +399,7 @@ const helpersStack = (three = window.THREE) => {
       let direction = this._prepareDirection(this._orientation);
 
       const SliceHelperConstructor = helpersSlice(three);
-      this._slice = new SliceHelperConstructor(this._stack, this._index, position, direction);
+      this._slice = new SliceHelperConstructor(this._stack, this._index, this._camera, position, direction);
       this.add(this._slice);
     }
 

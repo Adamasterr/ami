@@ -45,6 +45,7 @@ const onWindowResize = () => {
 window.addEventListener('resize', onWindowResize, false);
 
 const loader = new AMI.VolumeLoader(container);
+
 loader
   .load(file)
   .then(() => {
@@ -53,11 +54,10 @@ loader
     // console.log(series);
     loader.free();
 
-    const stackHelper = new AMI.StackHelper(stack);
+    const stackHelper = new AMI.StackHelper(stack, camera);
     stackHelper.bbox.visible = false;
     // stackHelper.border.color = 0xff0000;
     // stackHelper.grid.visible = true;
-    // stackHelper.grid.color = 0xffff00;
     scene.add(stackHelper);
 
     gui(stackHelper);
@@ -98,7 +98,6 @@ const animate = () => {
   controls.update();
   renderer.render(scene, camera);
   stats.update();
-
   requestAnimationFrame(function() {
     animate();
   });
@@ -175,10 +174,16 @@ const gui = stackHelper => {
     .add(stackHelper.slice, 'interpolation', 0, 1)
     .step(1)
     .listen();
+    
   const gridVisible = stackFolder.add(stackHelper.grid, 'gridVisible');
   gridVisible.onChange(value => {
     stackHelper.grid.gridVisible = value;
     console.log(stackHelper.grid.gridVisible);
+  });
+  const raycasterToggle = stackFolder.add(stackHelper.slice, 'raycasterToggle');
+  raycasterToggle.onChange(value => {
+    stackHelper.slice.raycasterToggle = value;
+    console.log(stackHelper.slice.raycasterToggle);
   });
     // stackFolder
     // .add(stackHelper.grid, 'gridVisible', 0, 1)

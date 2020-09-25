@@ -5,6 +5,7 @@ import ShadersVertex from '../shaders/shaders.data.vertex';
 import ShadersFragment from '../shaders/shaders.data.fragment';
 
 import { helpersMaterialMixin } from '../helpers/helpers.material.mixin';
+import { Scene } from 'three';
 
 /**
  * @module helpers/slice
@@ -20,6 +21,7 @@ const helpersSlice = (three = window.THREE) => {
     constructor(
       stack,
       index = 0,
+      camera, 
       position = new three.Vector3(0, 0, 0),
       direction = new three.Vector3(0, 0, 1),
       aabbSpace = 'IJK'
@@ -27,8 +29,14 @@ const helpersSlice = (three = window.THREE) => {
       //
       super();
 
+      let _this = this;
+
       // private vars
       this._stack = stack;
+      this._camera = camera;
+      this._raycasterToggle = false;
+      this._mouse = new three.Vector2();
+      this._raycaster = new three.Raycaster();
 
       // image settings
       // index only used to grab window/level and intercept/slope
@@ -82,6 +90,10 @@ const helpersSlice = (three = window.THREE) => {
 
       // update object
       this._create();
+
+      this._raycast();
+
+      
     }
 
     // getters/setters
@@ -92,6 +104,38 @@ const helpersSlice = (three = window.THREE) => {
 
     set stack(stack) {
       this._stack = stack;
+    }
+
+    get camera() {
+      return this._camera;
+    }
+
+    set camera(camera) {
+      this._camera = camera;
+    }
+
+    get raycasterToggle() {
+      return this._raycasterToggle;
+    }
+
+    set raycasterToggle(value) {
+      this._raycasterToggle = value;
+    }
+
+    get mouse() {
+      return this._mouse;
+    }
+
+    set mouse(mouse) {
+      this._mouse = mouse;
+    }
+
+    get raycaster() {
+      return this._raycaster;
+    }
+
+    set raycaster(raycaster) {
+      this.raycaster = raycaster;
     }
 
     get spacing() {
@@ -344,6 +388,7 @@ const helpersSlice = (three = window.THREE) => {
         this._center = this._stack.centerAABBox();
         this._toAABB = this._stack.lps2AABB;
       }
+
     }
 
     // private methods
@@ -406,6 +451,7 @@ const helpersSlice = (three = window.THREE) => {
 
       // create the mesh!
       this._mesh = new three.Mesh(this._geometry, this._material);
+      console.log(this._geometry);
       if (this._aaBBspace === 'IJK') {
         this._mesh.applyMatrix(this._stack.ijk2LPS);
         //
@@ -415,7 +461,45 @@ const helpersSlice = (three = window.THREE) => {
 
       // and add it!
       this.add(this._mesh);
+
     }
+
+    
+    mousemove(event) {
+      if (!this._raycasterToggle) {
+        return;
+      }
+      event.preventDefault();
+      this._mouse.set(( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1);
+      // this._mouse.set(( event.clientX / window.innerWidth ) * 2 - 1,  ( event.clientY / window.innerHeight ) * 2 + 1);
+      this._raycaster.setFromCamera(this._mouse, this._camera);
+
+      const intersects = this._raycaster.intersectObjects([this._mesh]);
+      
+      if (intersects.length > 0) {
+        const intersect = intersects[0];
+        let point = intersect.point;
+        console.log("point", point);
+        console.log("ijk2LPS", point.applyMatrix4(this._stack.ijk2LPS));
+        console.log("lps2IJK", point.applyMatrix4(this._stack.lps2IJK));
+        console.log("lsp2AABB", point.applyMatrix4(this._stack.lps2AABB));
+        
+        // this._raycasterToggle = false;
+
+        // rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+        // rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+      }
+      
+    }
+
+
+    _raycast() {
+      document.addEventListener('mousemove',
+      (event) => this.mousemove(event),
+      false);
+    }
+
+    
 
     updateIntensitySettings() {
       // if auto, get from frame index
