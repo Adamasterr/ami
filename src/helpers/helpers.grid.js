@@ -24,7 +24,6 @@ const helpersGrid = (three = window.THREE) => {
       this._slice = slice;
 
       this._gridVisible = false;
-      this._color = 0x00ff00;
       this._material = null;
       this._geometry = null;
       this._mesh = null;
@@ -34,6 +33,7 @@ const helpersGrid = (three = window.THREE) => {
       this._aaBBspace = aabbSpace;
       this._rows = 0;
       this._columns = 0;
+      this._halfDimensions = null;
 
       this._init();
 
@@ -196,14 +196,6 @@ const helpersGrid = (three = window.THREE) => {
         this._center = this._stack.centerAABBox();
         this._toAABB = this._stack.lps2AABB;
       }
-/* 
-      function mousemove(event) {
-        event.preventDefault();
-        console.log("HEYYA");
-      }
-
-      document.addEventListener('mousemove', mousemove);
- */
     }
 
 
@@ -252,9 +244,10 @@ const helpersGrid = (three = window.THREE) => {
 
       this._mesh = new three.LineSegments(this._geometry, this._material);
 
+      this._mesh.applyMatrix4(new three.Matrix4().makeTranslation(- 0.5,- 0.5, this._index - 0.5));
+
       if (this._aaBBspace === 'IJK') {
-        this._mesh.applyMatrix(new three.Matrix4().makeTranslation(- 0.5,- 0.5, this._index - 0.5));
-        this._mesh.applyMatrix(this._stack.ijk2LPS);
+        this._mesh.applyMatrix4(this._stack.ijk2LPS);
       };
 
       this.add(this._mesh);
