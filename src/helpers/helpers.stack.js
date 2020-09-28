@@ -3,6 +3,7 @@ import { helpersBorder } from '../helpers/helpers.border';
 import { helpersBoundingBox } from '../helpers/helpers.boundingbox';
 import { helpersGrid } from '../helpers/helpers.grid';
 import { helpersSlice } from '../helpers/helpers.slice';
+import { helpersSelector } from '../helpers/helpers.selector';
 
 /**
  * Helper to easily display and interact with a stack.<br>
@@ -53,6 +54,7 @@ const helpersStack = (three = window.THREE) => {
       this._slice = null;
       this._border = null;
       this._dummy = null;
+      this._selector = null;
 
       this._orientation = 0;
       this._index = 0;
@@ -124,6 +126,16 @@ const helpersStack = (three = window.THREE) => {
       return this._border;
     }
 
+
+    /**
+     * Get selector helper
+     * 
+     * @type {HelpersSelector}
+     */
+    get selector() {
+      return this._selector;
+    }
+
     /**
      * Set/get current slice index.<br>
      * Sets outOfBounds flag to know if target index is in/out stack bounding box.<br>
@@ -150,6 +162,8 @@ const helpersStack = (three = window.THREE) => {
 
       // also update the grid
       this._grid.index = this._index;
+
+      this._selector.index = this._index;
 
       // update ourOfBounds flag
       this._isIndexOutOfBounds();
@@ -274,6 +288,7 @@ const helpersStack = (three = window.THREE) => {
         // this._slice.visible = true;
         this._prepareBorder();
         this._prepareGrid();
+        this._prepareSelector();
         // todo: Arrow
       } else {
         window.console.log('no stack to be prepared...');
@@ -371,6 +386,12 @@ const helpersStack = (three = window.THREE) => {
       this.add(this._grid);
     }
 
+    _prepareSelector() {
+      const HelpersSelectorConstructor = helpersSelector(three);
+      this._selector = new HelpersSelectorConstructor(this._stack, this._slice, this._camera);
+      this.add(this._selector);
+    }
+
     /**
      * Setup border helper given slice helper and add border helper
      * to stack helper.
@@ -399,7 +420,7 @@ const helpersStack = (three = window.THREE) => {
       let direction = this._prepareDirection(this._orientation);
 
       const SliceHelperConstructor = helpersSlice(three);
-      this._slice = new SliceHelperConstructor(this._stack, this._index, this._camera, position, direction);
+      this._slice = new SliceHelperConstructor(this._stack, this._index, position, direction);
       this.add(this._slice);
     }
 
@@ -505,6 +526,8 @@ const helpersStack = (three = window.THREE) => {
       this._grid = null;
       this._border.dispose();
       this._border = null;
+      this._selector.dispose();
+      this._selector = null;
     }
   };
 };

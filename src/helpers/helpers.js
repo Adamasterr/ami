@@ -10,6 +10,7 @@ import ProgressBarEventBased from './helpers.progressbar.eventbased';
 import Slice, { helpersSlice } from './helpers.slice';
 import Stack, { helpersStack } from './helpers.stack';
 import VolumeRendering, { helpersVolumeRendering } from './helpers.volumerendering';
+import Selector, {helpersSelector} from './helpers.selector';
 
 export {
   Border as BorderHelper,
@@ -33,4 +34,6 @@ export {
   helpersStack as stackHelperFactory,
   VolumeRendering as VolumeRenderingHelper,
   helpersVolumeRendering as VolumeRenderingHelperFactory,
+  Selector as SelectorHelper,
+  helpersSelector as selectorHelperFactory,
 };
