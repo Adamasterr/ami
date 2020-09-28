@@ -251,7 +251,6 @@ const trackballOrtho = (three = window.THREE) => {
       // listeners
 
       function keydown(event) {
-        console.log(event.keyCode);
         if (_this.enabled === false) return;
 
         window.removeEventListener('keydown', keydown);
@@ -280,15 +279,14 @@ const trackballOrtho = (three = window.THREE) => {
       }
 
       function mousedown(event) {
-        if (_this.enabled === false) return;
+        if (_this.enabled === false || _state == STATE.SELECT) return;
 
-        event.preventDefault();
-        event.stopPropagation();
+        // event.preventDefault();
+        // event.stopPropagation();
 
         if (_state === STATE.NONE) {
           _state = event.button;
         }
-        console.log(event.button);
 
         if (_state === STATE.ROTATE && !_this.noRotate) {
         } else if (_state === STATE.ZOOM && !_this.noZoom) {
@@ -297,7 +295,7 @@ const trackballOrtho = (three = window.THREE) => {
         } else if (_state === STATE.PAN && !_this.noPan) {
           _panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
           _panEnd.copy(_panStart);
-        } /* TODO: else if state SELECT - select a slot for the grid*/
+        }
 
         document.addEventListener('mousemove', mousemove, false);
         document.addEventListener('mouseup', mouseup, false);

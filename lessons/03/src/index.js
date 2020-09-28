@@ -51,7 +51,6 @@ loader
   .then(() => {
     const series = loader.data[0].mergeSeries(loader.data);
     const stack = series[0].stack[0];
-    // console.log(series);
     loader.free();
 
     const stackHelper = new AMI.StackHelper(stack, camera);
@@ -178,22 +177,10 @@ const gui = stackHelper => {
   const gridVisible = stackFolder.add(stackHelper.grid, 'gridVisible');
   gridVisible.onChange(value => {
     stackHelper.grid.gridVisible = value;
-    console.log(stackHelper.grid.gridVisible);
   });
-  const raycasterToggle = stackFolder.add(stackHelper.slice, 'raycasterToggle');
-  raycasterToggle.onChange(value => {
-    stackHelper.slice.raycasterToggle = value;
-    console.log(stackHelper.slice.raycasterToggle);
+  const selectorToggle = stackFolder.add(stackHelper.selector, 'selectorToggle');
+  selectorToggle.onChange(value => {
+    stackHelper.selector.selectorToggle = value;
   });
-    // stackFolder
-    // .add(stackHelper.grid, 'gridVisible', 0, 1)
-    // .listen();
   stackFolder.open();
-
-  // const positionFolder = gui.addFolder('Mouse Posision');
-  // positionFolder
-  //   .add(stackHelper, 'x', 0, 255)
-  //   .step(1)
-  //   .listen();
-  // positionFolder.open();
 };
